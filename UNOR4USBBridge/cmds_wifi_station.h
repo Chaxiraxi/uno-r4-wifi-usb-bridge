@@ -12,8 +12,11 @@ void CAtHandler::add_cmds_wifi_station() {
    /* ....................................................................... */     
       switch (parser.cmd_mode) {
          case chAT::CommandMode::Run: {
+            /* Reject if ESP-NOW is active on the radio. */
+            if (radio_mode == RADIO_MODE_ESPNOW) {
+               return chAT::CommandStatus::ERROR;
+            }
             int n = WiFi.scanNetworks();
-            if (n == 0) {
             } 
             else {
                String scan_results = "";
@@ -258,6 +261,9 @@ void CAtHandler::add_cmds_wifi_station() {
    /* ....................................................................... */
       switch (parser.cmd_mode) {
          case chAT::CommandMode::Write: {
+            if (radio_mode == RADIO_MODE_ESPNOW) {
+               return chAT::CommandStatus::ERROR;
+            }
             if(parser.args.size() == 1) {
                auto &ssid = parser.args[0];
                if (ssid.empty()) {
@@ -265,6 +271,7 @@ void CAtHandler::add_cmds_wifi_station() {
                }
 
                int res = WiFi.begin(ssid.c_str());
+               radio_mode = RADIO_MODE_WIFI;
 
                String status = String(res);
                srv.write_response_prompt();
@@ -284,6 +291,7 @@ void CAtHandler::add_cmds_wifi_station() {
                }
 
                int res = WiFi.begin(ssid.c_str(), password.c_str());
+               radio_mode = RADIO_MODE_WIFI;
 
                String status = String(res);
                srv.write_response_prompt();
@@ -338,6 +346,7 @@ void CAtHandler::add_cmds_wifi_station() {
       switch (parser.cmd_mode) {
          case chAT::CommandMode::Run: {
             WiFi.disconnect();
+            radio_mode = RADIO_MODE_NONE;
 
             srv.write_response_prompt();
             srv.write_line_end();
@@ -353,6 +362,7 @@ void CAtHandler::add_cmds_wifi_station() {
                return chAT::CommandStatus::ERROR;
             }
             WiFi.disconnect(atoi(wifi_off.c_str()));
+            radio_mode = RADIO_MODE_NONE;
             return chAT::CommandStatus::OK;
          }
          default:

@@ -18,6 +18,9 @@ void CAtHandler::add_cmds_wifi_netif() {
    /* ....................................................................... */     
       switch (parser.cmd_mode) {
          case chAT::CommandMode::Run: {
+            if (radio_mode == RADIO_MODE_ESPNOW) {
+               return chAT::CommandStatus::ERROR;
+            }
             if (clients_num < MAX_CLIENT_AVAILABLE) {
                for (int i = 0; i < MAX_CLIENT_AVAILABLE; i++) {
                   if (clients[i] == nullptr) {
@@ -36,6 +39,9 @@ void CAtHandler::add_cmds_wifi_netif() {
             return chAT::CommandStatus::ERROR;
          }
          case chAT::CommandMode::Write: {
+            if (radio_mode == RADIO_MODE_ESPNOW) {
+               return chAT::CommandStatus::ERROR;
+            }
             if (parser.args.size() != 1) {
               return chAT::CommandStatus::ERROR;
             }

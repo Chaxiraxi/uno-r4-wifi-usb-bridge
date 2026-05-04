@@ -152,6 +152,17 @@ enum file_op {
 #define _SOFTSE_VERIFY_GET       "+SOFTSE_VERIFY_GET"
 #define _SOFTSE_SHA256_GET       "+SOFTSE_SHA256_GET"
 
+#define _ESPNOW_BEGIN            "+ESPNOWBEGIN"
+#define _ESPNOW_END              "+ESPNOWEND"
+#define _ESPNOW_ADDPEER          "+ESPNOWADDPEER"
+#define _ESPNOW_DELPEER          "+ESPNOWDELPEER"
+#define _ESPNOW_SEND             "+ESPNOWSEND"
+#define _ESPNOW_AVAILABLE        "+ESPNOWAVAILABLE"
+#define _ESPNOW_READ             "+ESPNOWREAD"
+#define _ESPNOW_STATUS           "+ESPNOWSTATUS"
+#define _ESPNOW_SETKEY           "+ESPNOWSETKEY"
+#define _ESPNOW_SETPEERKEY       "+ESPNOWSETPEERKEY"
+
 
 
 #define CMD(x)             _AT x _ENDL

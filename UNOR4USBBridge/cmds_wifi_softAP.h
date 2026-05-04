@@ -11,9 +11,12 @@ void CAtHandler::add_cmds_wifi_softAP() {
    /* ....................................................................... */     
       switch (parser.cmd_mode) {
          case chAT::CommandMode::Write: {
-         if (parser.args.size() <= 0 || parser.args.size() > 5) {
-            return chAT::CommandStatus::ERROR;
-         }
+            if (radio_mode == RADIO_MODE_ESPNOW) {
+               return chAT::CommandStatus::ERROR;
+            }
+            if (parser.args.size() <= 0 || parser.args.size() > 5) {
+               return chAT::CommandStatus::ERROR;
+            }
          const char * ssid = NULL;
          const char * passphrase = NULL;
          int ch  = 1;

@@ -40,6 +40,14 @@ using namespace SudoMaker;
 #define WIFI_ST_AP_CONNECTED          8
 #define WIFI_ST_AP_FAILED             9
 
+/* Radio-mode gate: prevents ESP-NOW and standard WiFi networking from being
+ * active at the same time on the shared 2.4 GHz radio. */
+enum RadioMode {
+   RADIO_MODE_NONE   = 0,
+   RADIO_MODE_WIFI   = 1,
+   RADIO_MODE_ESPNOW = 2,
+};
+
 
 class CClientWrapper {
 public:
@@ -96,7 +104,12 @@ private:
    void add_cmds_ota();
    void add_cmds_preferences();
    void add_cmds_se();
+   void add_cmds_espnow();
 public:
+   /* Current radio mode – checked by WiFi command handlers and ESP-NOW
+    * commands to enforce mutual exclusion on the 2.4 GHz radio. */
+   RadioMode radio_mode = RADIO_MODE_NONE;
+
    inline void addTask(std::function<void()> task) {
       tasks.push(task);
    }

@@ -12,6 +12,9 @@ void CAtHandler::add_cmds_wifi_udp() {
    /* ....................................................................... */     
       switch (parser.cmd_mode) {
          case chAT::CommandMode::Write: {
+            if (radio_mode == RADIO_MODE_ESPNOW) {
+               return chAT::CommandStatus::ERROR;
+            }
             if (parser.args.size() < 1 || parser.args.size() > 2) {
                
                return chAT::CommandStatus::ERROR;
